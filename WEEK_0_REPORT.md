@@ -3,8 +3,7 @@
 
 ## 1. Technical Deliverables
 - [x] **Environment Setup:** Configured Windsurf with ES7 snippets and Prettier.
-- [x] **Architecture:** Scaffaffolded `mechswap-frontend` with modular CSS and JS.
-- [x] **Feature Implementation:** Developed 'Add Product' page with video support and dynamic location dropdowns.
+- [x] **Architecture:** Scaffaffolded `trial-frontend` with modular CSS and JS.
 
 ## 2. Roadblocks & Fixes
 - **Vercel Deployment:** Resolved naming conflict and successfully deployed trial-frontend.

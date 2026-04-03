@@ -1,0 +1,24 @@
+{
+  "name": "industrial-machinery-marketplace",
+  "version": "1.0.0",
+  "description": "Professional industrial machinery marketplace with zero-brokerage platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 3000",
+    "build": "echo 'Build complete - static files ready for deployment'"
+  },
+  "keywords": [
+    "industrial",
+    "machinery",
+    "marketplace",
+    "zero-brokerage",
+    "frontend",
+    "static"
+  ],
+  "author": "Industrial Marketplace Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Machinery - Industrial Marketplace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --slate-gray: #2c3e50;
+            --light-slate: #34495e;
+            --medium-slate: #7f8c8d;
+            --light-gray: #ecf0f1;
+            --white: #ffffff;
+            --industrial-orange: #e67e22;
+            --dark-orange: #d35400;
+            --success: #27ae60;
+            --error: #e74c3c;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--slate-gray);
+        }
+
+        header {
+            background: var(--slate-gray);
+            color: var(--white);
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        nav ul li a {
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--industrial-orange);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-section {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--slate-gray);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-bottom: 1px solid #ddd;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 1rem;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--medium-slate);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .step.active .step-number {
+            background: var(--industrial-orange);
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--medium-slate);
+        }
+
+        .step.active .step-label {
+            color: var(--slate-gray);
+            font-weight: 600;
+        }
+
+        .form-content {
+            padding: 2rem;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--slate-gray);
+        }
+
+        .form-group label.required::after {
+            content: " *";
+            color: var(--error);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--industrial-orange);
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+        }
+
+        .form-control.error {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .location-dropdowns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--light-gray);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--industrial-orange);
+            background: rgba(230, 126, 34, 0.05);
+        }
+
+        .file-upload-area.drag-over {
+            border-color: var(--industrial-orange);
+            background: rgba(230, 126, 34, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--medium-slate);
+        }
+
+        .file-list {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--white);
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-type {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .file-type.photo {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .file-type.video {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .remove-file {
+            background: var(--error);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            background: var(--light-gray);
+            border-top: 1px solid #ddd;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--industrial-orange);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--medium-slate);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--slate-gray);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--industrial-orange);
+            border: 2px solid var(--industrial-orange);
+        }
+
+        .btn-outline:hover {
+            background: var(--industrial-orange);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .info-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .info-card-header {
+            background: var(--industrial-orange);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .info-card-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-content {
+            padding: 1.5rem;
+        }
+
+        .info-card-content h4 {
+            color: var(--slate-gray);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: var(--industrial-orange);
+        }
+
+        .benefit-text h5 {
+            color: var(--slate-gray);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .benefit-text p {
+            color: var(--medium-slate);
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .contact-info {
+            background: var(--slate-gray);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--industrial-orange);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .location-dropdowns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .form-content {
+                padding: 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .step-indicator {
+                flex-wrap: wrap;
+            }
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn.loading .loading-spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🏭 Industrial Machinery Marketplace</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#" class="active">Add Machinery</a></li>
+                    <li><a href="#">Browse</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <section class="form-section">
+            <div class="form-header">
+                <h2>Add New Machinery</h2>
+                <p>List your industrial equipment on our zero-brokerage platform</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Basic Details</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Specifications</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Media</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%;"></div>
+            </div>
+
+            <form id="machineryForm" class="form-content">
+                <!-- Step 1: Basic Details -->
+                <div class="form-step active" data-step="1">
+                    <h3>Basic Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="machineryTitle" class="required">Machinery Title</label>
+                        <input type="text" id="machineryTitle" name="machineryTitle" class="form-control" placeholder="e.g., CNC Milling Machine XYZ-2000" required>
+                        <div class="error-message">Please enter a machinery title</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="machineryCategory" class="required">Machinery Category</label>
+                        <select id="machineryCategory" name="machineryCategory" class="form-control" required>
+                            <option value="">Select a category</option>
+                            <option value="cnc">CNC Machines</option>
+                            <option value="lathe">Lathe Machines</option>
+                            <option value="generator">Generators</option>
+                            <option value="press">Press Machines</option>
+                            <option value="welding">Welding Equipment</option>
+                            <option value="excavator">Excavators</option>
+                            <option value="crane">Cranes</option>
+                            <option value="compressor">Air Compressors</option>
+                            <option value="forklift">Forklifts</option>
+                            <option value="other">Other Machinery</option>
+                        </select>
+                        <div class="error-message">Please select a category</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="brand" class="required">Brand/Manufacturer</label>
+                            <input type="text" id="brand" name="brand" class="form-control" placeholder="e.g., Haas, DMG Mori" required>
+                            <div class="error-message">Please enter the brand</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="model" class="required">Model</label>
+                            <input type="text" id="model" name="model" class="form-control" placeholder="e.g., VF-2, DMU 50" required>
+                            <div class="error-message">Please enter the model</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="required">Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="4" placeholder="Provide detailed description of the machinery, condition, and features..." required></textarea>
+                        <div class="error-message">Please provide a description</div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Specifications -->
+                <div class="form-step" data-step="2">
+                    <h3>Technical Specifications</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="year" class="required">Manufacturing Year</label>
+                            <input type="number" id="year" name="year" class="form-control" placeholder="e.g., 2020" min="1950" max="2024" required>
+                            <div class="error-message">Please enter a valid year</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="condition" class="required">Condition</label>
+                            <select id="condition" name="condition" class="form-control" required>
+                                <option value="">Select condition</option>
+                                <option value="excellent">Excellent - Like New</option>
+                                <option value="good">Good - Well Maintained</option>
+                                <option value="fair">Fair - Operational</option>
+                                <option value="needs-repair">Needs Repair</option>
+                            </select>
+                            <div class="error-message">Please select the condition</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price" class="required">Price (₹)</label>
+                            <input type="number" id="price" name="price" class="form-control" placeholder="e.g., 2500000" min="0" required>
+                            <div class="error-message">Please enter a valid price</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="negotiable">Price Negotiable</label>
+                            <select id="negotiable" name="negotiable" class="form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                                <option value="slightly">Slightly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="power">Power Consumption (kW)</label>
+                            <input type="number" id="power" name="power" class="form-control" placeholder="e.g., 15" min="0" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" class="form-control" placeholder="e.g., 5000" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specifications">Additional Specifications</label>
+                        <textarea id="specifications" name="specifications" class="form-control" rows="3" placeholder="Enter any additional technical specifications..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 3: Location -->
+                <div class="form-step" data-step="3">
+                    <h3>Location Information</h3>
+                    
+                    <div class="location-dropdowns">
+                        <div class="form-group">
+                            <label for="state" class="required">State</label>
+                            <select id="state" name="state" class="form-control" required>
+                                <option value="">Select State</option>
+                                <option value="maharashtra">Maharashtra</option>
+                                <option value="gujarat">Gujarat</option>
+                                <option value="tamil-nadu">Tamil Nadu</option>
+                                <option value="karnataka">Karnataka</option>
+                                <option value="andhra-pradesh">Andhra Pradesh</option>
+                                <option value="telangana">Telangana</option>
+                                <option value="uttar-pradesh">Uttar Pradesh</option>
+                                <option value="rajasthan">Rajasthan</option>
+                                <option value="madhya-pradesh">Madhya Pradesh</option>
+                                <option value="delhi">Delhi</option>
+                            </select>
+                            <div class="error-message">Please select a state</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city" class="required">City</label>
+                            <select id="city" name="city" class="form-control" required disabled>
+                                <option value="">First select a state</option>
+                            </select>
+                            <div class="error-message">Please select a city</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address" class="required">Address</label>
+                        <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter the complete address where machinery is located..." required></textarea>
+                        <div class="error-message">Please enter the address</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pincode" class="required">Pincode</label>
+                            <input type="text" id="pincode" name="pincode" class="form-control" placeholder="e.g., 400001" maxlength="6" pattern="[0-9]{6}" required>
+                            <div class="error-message">Please enter a valid 6-digit pincode</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="availability">Availability</label>
+                            <select id="availability" name="availability" class="form-control">
+                                <option value="immediate">Immediate</option>
+                                <option value="1-week">Within 1 Week</option>
+                                <option value="2-weeks">Within 2 Weeks</option>
+                                <option value="1-month">Within 1 Month</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Media Upload -->
+                <div class="form-step" data-step="4">
+                    <h3>Photos & Videos</h3>
+                    
+                    <div class="form-group">
+                        <label>Upload Photos (JPG, PNG, max 5MB each)</label>
+                        <div class="file-upload-area" id="photoUploadArea">
+                            <div class="upload-icon">📷</div>
+                            <p><strong>Click to upload or drag and drop</strong></p>
+                            <p>Support for: JPG, PNG (Max 5MB per file)</p>
+                            <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div class="file-list" id="photoList"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Videos (MP4, max 50MB each)</label>
+                        <div class="file-upload-area" id="videoUploadArea">
+                            <div class="upload-icon">🎥</div>
+                            <p><strong>Click to upload or drag and drop</strong></p>
+                            <p>Support for: MP4 (Max 50MB per file)</p>
+                            <input type="file" id="videoInput" accept="video/mp4" multiple style="display: none;">
+                        </div>
+                        <div class="file-list" id="videoList"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="youtubeLink">YouTube Video Link (Optional)</label>
+                        <input type="url" id="youtubeLink" name="youtubeLink" class="form-control" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">Next</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                        Submit Listing
+                        <span class="loading-spinner"></span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <aside class="sidebar">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h3>💰 How to Buy</h3>
+                    <p>Zero Brokerage Platform</p>
+                </div>
+                <div class="info-card-content">
+                    <h4>Why Choose Our Platform?</h4>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🚫</div>
+                        <div class="benefit-text">
+                            <h5>Zero Brokerage</h5>
+                            <p>Connect directly with buyers. No middlemen, no commission fees.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🤝</div>
+                        <div class="benefit-text">
+                            <h5>Direct Dealings</h5>
+                            <p>Negotiate and transact directly with verified buyers.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🔍</div>
+                        <div class="benefit-text">
+                            <h5>Wide Reach</h5>
+                            <p>Your listing reaches thousands of potential buyers across India.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📈</div>
+                        <div class="benefit-text">
+                            <h5>Better Prices</h5>
+                            <p>Get better value by eliminating brokerage costs.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🛡️</div>
+                        <div class="benefit-text">
+                            <h5>Secure Platform</h5>
+                            <p>Safe and secure transactions with verified users.</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <p><strong>Need Help?</strong></p>
+                        <p>📞 1800-XXX-XXXX</p>
+                        <p>📧 support@industrymarketplace.com</p>
+                        <p>⏰ Mon-Sat: 9AM-6PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-header" style="background: var(--slate-gray);">
+                    <h3>📋 Listing Tips</h3>
+                </div>
+                <div class="info-card-content">
+                    <ul style="padding-left: 1.5rem; color: var(--medium-slate);">
+                        <li style="margin-bottom: 0.5rem;">Provide accurate specifications</li>
+                        <li style="margin-bottom: 0.5rem;">Upload clear, high-quality photos</li>
+                        <li style="margin-bottom: 0.5rem;">Include videos showing operation</li>
+                        <li style="margin-bottom: 0.5rem;">Set competitive pricing</li>
+                        <li style="margin-bottom: 0.5rem;">Be responsive to inquiries</li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Industrial Machinery Marketplace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // State management
+        let currentStep = 1;
+        const totalSteps = 4;
+        let uploadedFiles = {
+            photos: [],
+            videos: []
+        };
+
+        // City data for each state
+        const cityData = {
+            'maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad', 'Solapur', 'Amravati'],
+            'gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Gandhinagar', 'Bhavnagar', 'Jamnagar'],
+            'tamil-nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Tirunelveli', 'Vellore'],
+            'karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Mangalore', 'Belgaum', 'Gulbarga', 'Davanagere'],
+            'andhra-pradesh': ['Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Kurnool', 'Tirupati', 'Rajahmundry'],
+            'telangana': ['Hyderabad', 'Warangal', 'Nizamabad', 'Karimnagar', 'Khammam', 'Ramagundam', 'Mahabubnagar'],
+            'uttar-pradesh': ['Lucknow', 'Kanpur', 'Ghaziabad', 'Agra', 'Varanasi', 'Meerut', 'Allahabad'],
+            'rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota', 'Ajmer', 'Bikaner', 'Alwar'],
+            'madhya-pradesh': ['Bhopal', 'Indore', 'Gwalior', 'Jabalpur', 'Ujjain', 'Sagar', 'Dewas'],
+            'delhi': ['New Delhi', 'North Delhi', 'South Delhi', 'East Delhi', 'West Delhi', 'Central Delhi']
+        };
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            setupFileUpload();
+            setupLocationDropdowns();
+            setupFormValidation();
+        });
+
+        function initializeForm() {
+            updateStepIndicator();
+            updateProgressBar();
+        }
+
+        function changeStep(direction) {
+            if (direction === 1 && !validateCurrentStep()) {
+                return;
+            }
+
+            // Hide current step
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+            
+            // Update step number
+            currentStep += direction;
+            
+            // Show new step
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+            
+            // Update UI
+            updateStepIndicator();
+            updateProgressBar();
+            updateButtons();
+        }
+
+        function updateStepIndicator() {
+            document.querySelectorAll('.step').forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+
+        function updateProgressBar() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.disabled = currentStep === 1;
+            
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function validateCurrentStep() {
+            const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    field.nextElementSibling.style.display = 'block';
+                    isValid = false;
+                } else {
+                    field.classList.remove('error');
+                    field.nextElementSibling.style.display = 'none';
+                }
+            });
+            
+            // Special validation for pincode
+            if (currentStep === 3) {
+                const pincodeField = document.getElementById('pincode');
+                if (pincodeField.value && !/^[0-9]{6}$/.test(pincodeField.value)) {
+                    pincodeField.classList.add('error');
+                    pincodeField.nextElementSibling.style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                showAlert('Please fill in all required fields correctly', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function setupLocationDropdowns() {
+            const stateSelect = document.getElementById('state');
+            const citySelect = document.getElementById('city');
+            
+            stateSelect.addEventListener('change', function() {
+                const selectedState = this.value;
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                citySelect.disabled = !selectedState;
+                
+                if (selectedState && cityData[selectedState]) {
+                    cityData[selectedState].forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function setupFileUpload() {
+            // Photo upload
+            const photoUploadArea = document.getElementById('photoUploadArea');
+            const photoInput = document.getElementById('photoInput');
+            
+            photoUploadArea.addEventListener('click', () => photoInput.click());
+            
+            photoUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                photoUploadArea.classList.add('drag-over');
+            });
+            
+            photoUploadArea.addEventListener('dragleave', () => {
+                photoUploadArea.classList.remove('drag-over');
+            });
+            
+            photoUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                photoUploadArea.classList.remove('drag-over');
+                handleFileUpload(e.dataTransfer.files, 'photos');
+            });
+            
+            photoInput.addEventListener('change', (e) => {
+                handleFileUpload(e.target.files, 'photos');
+            });
+            
+            // Video upload
+            const videoUploadArea = document.getElementById('videoUploadArea');
+            const videoInput = document.getElementById('videoInput');
+            
+            videoUploadArea.addEventListener('click', () => videoInput.click());
+            
+            videoUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                videoUploadArea.classList.add('drag-over');
+            });
+            
+            videoUploadArea.addEventListener('dragleave', () => {
+                videoUploadArea.classList.remove('drag-over');
+            });
+            
+            videoUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                videoUploadArea.classList.remove('drag-over');
+                handleFileUpload(e.dataTransfer.files, 'videos');
+            });
+            
+            videoInput.addEventListener('change', (e) => {
+                handleFileUpload(e.target.files, 'videos');
+            });
+        }
+
+        function handleFileUpload(files, type) {
+            const maxSize = type === 'photos' ? 5 * 1024 * 1024 : 50 * 1024 * 1024; // 5MB for photos, 50MB for videos
+            const allowedTypes = type === 'photos' ? ['image/jpeg', 'image/png', 'image/jpg'] : ['video/mp4'];
+            
+            Array.from(files).forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    showAlert(`Invalid file type. Please upload ${type === 'photos' ? 'JPG or PNG' : 'MP4'} files only.`, 'error');
+                    return;
+                }
+                
+                if (file.size > maxSize) {
+                    showAlert(`File size exceeds limit. Maximum size is ${type === 'photos' ? '5MB' : '50MB'} per file.`, 'error');
+                    return;
+                }
+                
+                const fileId = Date.now() + Math.random();
+                uploadedFiles[type].push({
+                    id: fileId,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    file: file
+                });
+                
+                displayUploadedFile(fileId, file.name, file.size, type);
+            });
+        }
+
+        function displayUploadedFile(fileId, fileName, fileSize, type) {
+            const fileList = document.getElementById(type === 'photos' ? 'photoList' : 'videoList');
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.dataset.fileId = fileId;
+            
+            const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+            const fileIcon = type === 'photos' ? '📷' : '🎥';
+            const fileClass = type === 'photos' ? 'photo' : 'video';
+            
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <span>${fileIcon}</span>
+                    <div>
+                        <div>${fileName}</div>
+                        <small>${fileSizeMB} MB</small>
+                    </div>
+                    <span class="file-type ${fileClass}">${type.toUpperCase()}</span>
+                </div>
+                <button type="button" class="remove-file" onclick="removeFile(${fileId}, '${type}')">Remove</button>
+            `;
+            
+            fileList.appendChild(fileItem);
+        }
+
+        function removeFile(fileId, type) {
+            uploadedFiles[type] = uploadedFiles[type].filter(file => file.id !== fileId);
+            document.querySelector(`.file-item[data-file-id="${fileId}"]`).remove();
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('machineryForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validateCurrentStep()) {
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                
+                // Simulate form submission
+                setTimeout(() => {
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Add uploaded files info
+                    data.photos = uploadedFiles.photos.map(f => ({ name: f.name, size: f.size }));
+                    data.videos = uploadedFiles.videos.map(f => ({ name: f.name, size: f.size }));
+                    
+                    console.log('Form submitted with data:', data);
+                    
+                    // Show success message
+                    showAlert('Machinery listing submitted successfully! We will review and publish it within 24 hours.', 'success');
+                    
+                    // Reset form
+                    form.reset();
+                    uploadedFiles.photos = [];
+                    uploadedFiles.videos = [];
+                    document.getElementById('photoList').innerHTML = '';
+                    document.getElementById('videoList').innerHTML = '';
+                    
+                    // Reset to first step
+                    currentStep = 1;
+                    document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+                    document.querySelector('.form-step[data-step="1"]').classList.add('active');
+                    updateStepIndicator();
+                    updateProgressBar();
+                    updateButtons();
+                    
+                    // Remove loading state
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 2000);
+            });
+            
+            // Remove error state on input
+            document.querySelectorAll('.form-control').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.classList.remove('error');
+                    if (this.nextElementSibling && this.nextElementSibling.classList.contains('error-message')) {
+                        this.nextElementSibling.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Remove error state on input change
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('form-control')) {
+                e.target.classList.remove('error');
+                const errorMsg = e.target.nextElementSibling;
+                if (errorMsg && errorMsg.classList.contains('error-message')) {
+                    errorMsg.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
